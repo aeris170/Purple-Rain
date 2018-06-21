@@ -115,7 +115,6 @@ public class Window extends JWindow {
 		try {
 			BufferedImage bf = ImageIO.read(Window.class.getResourceAsStream("/trayIcon.png"));
 			trayIcon = new TrayIcon(bf, "Purple Rain");
-			trayIcon.setImageAutoSize(true);
 
 		} catch (IOException ex) {
 			System.exit(-2);
@@ -170,12 +169,15 @@ public class Window extends JWindow {
 		popup.addSeparator();
 		popup.add(exitItem);
 
+		trayIcon.setImageAutoSize(true);
 		trayIcon.setPopupMenu(popup);
+		trayIcon.setToolTip("Purple-Rain 1.0");
 
 		try {
 			tray.add(trayIcon);
 		} catch (AWTException e) {
 			System.out.println("TrayIcon could not be added.");
 		}
+		trayIcon.displayMessage("Minimised", "Purple-Rain is running in System Tray.", TrayIcon.MessageType.INFO);
 	}
 }
