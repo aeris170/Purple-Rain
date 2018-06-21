@@ -65,10 +65,10 @@ public class Panel extends JPanel {
 	/**
 	 * Sets the global rain color.
 	 *
-	 * @param r the r
-	 * @param g the g
-	 * @param b the b
-	 * @param a the a
+	 * @param r the presence of red channel
+	 * @param g the presence of green channel
+	 * @param b the presence of blue channel
+	 * @param a the presence of alpha channel
 	 */
 	public static void setGlobalRainColor(int r, int g, int b, int a) {
 		globalRainColor = new Color(r, g, b, a);
