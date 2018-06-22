@@ -33,7 +33,7 @@ import logic.Handler;
  * The Class Window.
  *
  * @author Doða Oruç <doga.oruc.tr@gmail.com>
- * @version 1.0
+ * @version 1.01
  * @since 1.0
  */
 public class Window extends JWindow {
