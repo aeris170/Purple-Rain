@@ -3,6 +3,7 @@ package gui;
 import java.awt.AWTException;
 import java.awt.CheckboxMenuItem;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -20,9 +21,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.sun.jna.Native;
+import com.sun.jna.platform.win32.User32;
+import com.sun.jna.platform.win32.WinDef;
+import com.sun.jna.platform.win32.WinUser;
+import com.sun.jna.platform.win32.WinDef.HWND;
+
 import logic.Handler;
 
 /**
+ * The Class Window.
+ *
  * @author Doða Oruç <doga.oruc.tr@gmail.com>
  * @version 1.0
  * @since 1.0
@@ -98,6 +107,7 @@ public class Window extends JWindow {
 		purpleRain.setBackground(new Color(0, 0, 0, 0));
 		Settings.initializeSettings();
 		purpleRain.setVisible(true);
+		setTransparent(purpleRain);
 	}
 
 	/**
@@ -179,5 +189,31 @@ public class Window extends JWindow {
 			System.out.println("TrayIcon could not be added.");
 		}
 		trayIcon.displayMessage("Minimised", "Purple-Rain is running in System Tray.", TrayIcon.MessageType.INFO);
+	}
+	
+	//https://stackoverflow.com/questions/11217660/java-making-a-window-click-through-including-text-images
+	//By Joe C
+	/**
+	 * Sets a component transparent(click-through).
+	 *
+	 * @param w the window which to be made transparent
+	 */
+	private static void setTransparent(Component w) {
+	    WinDef.HWND hwnd = getHWnd(w);
+	    int wl = User32.INSTANCE.GetWindowLong(hwnd, WinUser.GWL_EXSTYLE);
+	    wl = wl | WinUser.WS_EX_LAYERED | WinUser.WS_EX_TRANSPARENT;
+	    User32.INSTANCE.SetWindowLong(hwnd, WinUser.GWL_EXSTYLE, wl);
+	}
+
+	/**
+	 * Get the window handle from the OS.
+	 *
+	 * @param w the window
+	 * @return the window handle
+	 */
+	private static HWND getHWnd(Component w) {
+	    HWND hwnd = new HWND();
+	    hwnd.setPointer(Native.getComponentPointer(w));
+	    return hwnd;
 	}
 }
