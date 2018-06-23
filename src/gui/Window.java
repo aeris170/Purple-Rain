@@ -100,6 +100,7 @@ public class Window extends JWindow {
 		final Window purpleRain = new Window();
 		createAndShowTray(purpleRain);
 		purpleRain.add(new Panel());
+		purpleRain.setLocation(0, 0);
 		purpleRain.setMinimumSize(SCREEN_SIZE);
 		purpleRain.setPreferredSize(SCREEN_SIZE);
 		purpleRain.setMaximumSize(SCREEN_SIZE);
