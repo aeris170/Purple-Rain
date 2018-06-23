@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -190,6 +192,14 @@ public final class Settings extends JFrame {
 		super.pack();
 		super.setLocationByPlatform(true);
 		retrieveSettingsFromHierarchialNode();
+		super.addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				retrieveSettingsFromHierarchialNode();
+				dispose();
+			}
+		});
 		super.setVisible(true);
 	}
 
