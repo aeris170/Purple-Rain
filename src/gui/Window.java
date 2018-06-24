@@ -5,6 +5,7 @@ import java.awt.CheckboxMenuItem;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
@@ -14,7 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
@@ -40,6 +41,9 @@ public class Window extends JWindow {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 8057422959109245215L;
+
+	/** The Constant VERSION NUMBER. */
+	private static final String VERSION = "1.1";
 
 	/** The Constant tk. */
 	private static final Toolkit tk = Toolkit.getDefaultToolkit();
@@ -88,15 +92,8 @@ public class Window extends JWindow {
 	private static void createAndShowGUI() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException ex) {
-			ex.printStackTrace();
-		} catch (InstantiationException ex) {
-			ex.printStackTrace();
-		} catch (IllegalAccessException ex) {
-			ex.printStackTrace();
-		} catch (UnsupportedLookAndFeelException ex) {
-			ex.printStackTrace();
-		}
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {} // swallow
+
 		final Window purpleRain = new Window();
 		createAndShowTray(purpleRain);
 		purpleRain.add(new Panel());
@@ -121,13 +118,12 @@ public class Window extends JWindow {
 			System.out.println("SystemTray is not supported");
 			System.exit(-1);
 		}
-		PopupMenu popup = new PopupMenu();
+		final PopupMenu popup = new PopupMenu();
 		TrayIcon trayIcon = null;
 		try {
-			BufferedImage bf = ImageIO.read(Window.class.getResourceAsStream("/trayIcon.png"));
-			trayIcon = new TrayIcon(bf, "Purple Rain");
-
-		} catch (IOException ex) {
+			final BufferedImage bf = ImageIO.read(Window.class.getResourceAsStream("/trayIcon.png"));
+			trayIcon = new TrayIcon(bf, "Purple-Rain " + VERSION);
+		} catch (IOException | IllegalArgumentException ex) {
 			System.exit(-2);
 		}
 		final SystemTray tray = SystemTray.getSystemTray();
@@ -156,7 +152,9 @@ public class Window extends JWindow {
 
 		final MenuItem aboutItem = new MenuItem("About");
 		aboutItem.addActionListener(e -> {
-			JOptionPane.showMessageDialog(null, "Written in tribute to Prince", "About", JOptionPane.OK_OPTION, (Icon) UIManager.get("OptionPane.informationIcon"));
+			try {
+				JOptionPane.showMessageDialog(null, "Written in tribute to Prince", "About", JOptionPane.OK_OPTION, new ImageIcon(ImageIO.read(Window.class.getResourceAsStream("/trayIcon.png"))));
+			} catch (HeadlessException | IOException ex) {} // swallow
 		});
 
 		final MenuItem settingsItem = new MenuItem("Settings");
@@ -182,7 +180,7 @@ public class Window extends JWindow {
 
 		trayIcon.setImageAutoSize(true);
 		trayIcon.setPopupMenu(popup);
-		trayIcon.setToolTip("Purple-Rain 1.0");
+		trayIcon.setToolTip("Purple-Rain " + VERSION);
 
 		try {
 			tray.add(trayIcon);
@@ -191,19 +189,19 @@ public class Window extends JWindow {
 		}
 		trayIcon.displayMessage("Minimised", "Purple-Rain is running in System Tray.", TrayIcon.MessageType.INFO);
 	}
-	
-	//https://stackoverflow.com/questions/11217660/java-making-a-window-click-through-including-text-images
-	//By Joe C
+
+	// https://stackoverflow.com/questions/11217660/java-making-a-window-click-through-including-text-images
+	// By Joe C
 	/**
 	 * Sets a component transparent(click-through).
 	 *
 	 * @param w the window which to be made transparent
 	 */
 	private static void setTransparent(Component w) {
-	    WinDef.HWND hwnd = getHWnd(w);
-	    int wl = User32.INSTANCE.GetWindowLong(hwnd, WinUser.GWL_EXSTYLE);
-	    wl = wl | WinUser.WS_EX_LAYERED | WinUser.WS_EX_TRANSPARENT;
-	    User32.INSTANCE.SetWindowLong(hwnd, WinUser.GWL_EXSTYLE, wl);
+		WinDef.HWND hwnd = getHWnd(w);
+		int wl = User32.INSTANCE.GetWindowLong(hwnd, WinUser.GWL_EXSTYLE);
+		wl = wl | WinUser.WS_EX_LAYERED | WinUser.WS_EX_TRANSPARENT;
+		User32.INSTANCE.SetWindowLong(hwnd, WinUser.GWL_EXSTYLE, wl);
 	}
 
 	/**
@@ -213,8 +211,8 @@ public class Window extends JWindow {
 	 * @return the window handle
 	 */
 	private static HWND getHWnd(Component w) {
-	    HWND hwnd = new HWND();
-	    hwnd.setPointer(Native.getComponentPointer(w));
-	    return hwnd;
+		HWND hwnd = new HWND();
+		hwnd.setPointer(Native.getComponentPointer(w));
+		return hwnd;
 	}
 }

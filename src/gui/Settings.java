@@ -66,7 +66,7 @@ public final class Settings extends JFrame {
 	private JButton applyButton, cancelButton;
 
 	/**
-	 * Instantiates a new settings.
+	 * Instantiates a new settings window.
 	 */
 	public Settings() {
 		settingsPanel = new JPanel();
