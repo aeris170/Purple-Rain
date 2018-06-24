@@ -69,6 +69,7 @@ public final class Settings extends JFrame {
 	 * Instantiates a new settings window.
 	 */
 	public Settings() {
+		super("Purple-Rain " + Window.VERSION + " Settings");
 		settingsPanel = new JPanel();
 		settingsPanel.setLayout(new BorderLayout());
 

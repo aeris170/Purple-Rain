@@ -43,7 +43,7 @@ public class Window extends JWindow {
 	private static final long serialVersionUID = 8057422959109245215L;
 
 	/** The Constant VERSION NUMBER. */
-	private static final String VERSION = "1.1";
+	public static final String VERSION = "1.1";
 
 	/** The Constant tk. */
 	private static final Toolkit tk = Toolkit.getDefaultToolkit();
