@@ -18,7 +18,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -31,7 +30,7 @@ import logic.Handler;
 
 /**
  * @author Doða Oruç <doga.oruc.tr@gmail.com>
- * @version 1.1
+ * @version 1.11
  * @since 1.0
  */
 public final class Settings extends JDialog {
