@@ -2,24 +2,30 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import logic.Handler;
 
@@ -28,7 +34,7 @@ import logic.Handler;
  * @version 1.1
  * @since 1.0
  */
-public final class Settings extends JFrame {
+public final class Settings extends JDialog {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 8165468108436061431L;
@@ -59,7 +65,7 @@ public final class Settings extends JFrame {
 	private static final String RAINBOW = "rainbow";
 
 	private JPanel settingsPanel;
-	private JSlider rSlider, gSlider, bSlider, aSlider;
+	private SpinSlider rSlider, gSlider, bSlider, aSlider;
 	private JSpinner maxSpinner;
 	private JCheckBox special;
 	private JRadioButton lsd, rainbow;
@@ -69,7 +75,14 @@ public final class Settings extends JFrame {
 	 * Instantiates a new settings window.
 	 */
 	public Settings() {
-		super("Purple-Rain " + Window.VERSION + " Settings");
+		super.setTitle("Purple-Rain " + Window.VERSION + " Settings");
+
+		try {
+			super.setIconImage(ImageIO.read(getClass().getResourceAsStream("/trayIcon.png")));
+		} catch (IOException ex) {
+			System.exit(-2);
+		}
+
 		settingsPanel = new JPanel();
 		settingsPanel.setLayout(new BorderLayout());
 
@@ -82,10 +95,10 @@ public final class Settings extends JFrame {
 
 		final Color rainColor = Panel.getGlobalRainColor();
 
-		rSlider = new JSlider(SwingConstants.HORIZONTAL, 0, 255, rainColor.getRed());
-		gSlider = new JSlider(SwingConstants.HORIZONTAL, 0, 255, rainColor.getGreen());
-		bSlider = new JSlider(SwingConstants.HORIZONTAL, 0, 255, rainColor.getBlue());
-		aSlider = new JSlider(SwingConstants.HORIZONTAL, 0, 255, rainColor.getAlpha());
+		rSlider = new SpinSlider(rainColor.getRed());
+		gSlider = new SpinSlider(rainColor.getGreen());
+		bSlider = new SpinSlider(rainColor.getBlue());
+		aSlider = new SpinSlider(rainColor.getAlpha());
 
 		maxSpinner = new JSpinner(new SpinnerNumberModel(Handler.getMAX(), 0, 1000, 1));
 
@@ -280,5 +293,33 @@ public final class Settings extends JFrame {
 		} catch (BackingStoreException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.awt.Container#getPreferredSize()
+	 * @see https://stackoverflow.com/a/12517873/9451867 Method to resize the
+	 * settings window respective to it's title.
+	 */
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension retVal = super.getPreferredSize();
+
+		String title = this.getTitle();
+
+		if (title != null) {
+			Font defaultFont = UIManager.getDefaults().getFont("Label.font");
+			int titleStringWidth = SwingUtilities.computeStringWidth(new JLabel().getFontMetrics(defaultFont), title);
+
+			// account for titlebar button widths. (estimated)
+			titleStringWidth += 110;
+
+			// +10 accounts for the three dots that are appended when
+			// the title is too long
+			if (retVal.getWidth() + 10 <= titleStringWidth) {
+				retVal = new Dimension(titleStringWidth, (int) retVal.getHeight());
+			}
+		}
+		return retVal;
 	}
 }
