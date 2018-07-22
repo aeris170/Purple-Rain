@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.FlowLayout;
+
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
@@ -14,23 +15,22 @@ import javax.swing.event.ChangeListener;
  * @author trashgod
  * @version 1.11
  * @since 1.11
- * @see https://stackoverflow.com/questions/6067898
+ * @see "https://stackoverflow.com/questions/6067898"
  */
 public class SpinSlider extends JPanel {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -4628802037851293886L;
-	
+
 	private static final int MAX = 255;
 	private static final int MIN = 0;
-	
+
 	private static final int SLIDER_MAJOR_TICK_SPACE = 64;
 	private static final int SLIDER_MINOR_TICK_SPACE = 8;
 
-	private boolean sliderFired = false;
-	
-	private JSpinner spinner;
-	private JSlider slider;
+	boolean sliderFired = false;
+	JSpinner spinner;
+	JSlider slider;
 
 	/**
 	 * Instantiates a new spin slider.
@@ -39,7 +39,7 @@ public class SpinSlider extends JPanel {
 	 */
 	public SpinSlider(final int initialValue) {
 		this.setLayout(new FlowLayout());
-		
+
 		spinner = new JSpinner();
 		slider = new JSlider(MIN, MAX, initialValue);
 
@@ -51,7 +51,7 @@ public class SpinSlider extends JPanel {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				JSlider s = (JSlider) e.getSource();
-				if (!sliderFired) {
+				if(!sliderFired) {
 					spinner.setValue(s.getValue());
 				}
 			}
@@ -71,7 +71,7 @@ public class SpinSlider extends JPanel {
 		});
 		this.add(spinner);
 	}
-	
+
 	public void addChangeListener(ChangeListener ch) {
 		slider.addChangeListener(ch);
 		spinner.addChangeListener(ch);
@@ -85,7 +85,7 @@ public class SpinSlider extends JPanel {
 	public int getValue() {
 		return slider.getValue();
 	}
-	
+
 	/**
 	 * Sets the value of the slider.
 	 *

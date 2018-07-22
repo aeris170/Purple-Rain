@@ -25,8 +25,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
-import com.sun.jna.platform.win32.WinUser;
 import com.sun.jna.platform.win32.WinDef.HWND;
+import com.sun.jna.platform.win32.WinUser;
 
 import logic.Handler;
 
@@ -92,7 +92,7 @@ public class Window extends JWindow {
 	private static void createAndShowGUI() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {} // swallow
+		} catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {} // swallow
 
 		final Window purpleRain = new Window();
 		createAndShowTray(purpleRain);
@@ -113,8 +113,9 @@ public class Window extends JWindow {
 	 *
 	 * @param window the window
 	 */
+	@SuppressWarnings("null")
 	private static void createAndShowTray(Window window) {
-		if (!SystemTray.isSupported()) {
+		if(!SystemTray.isSupported()) {
 			System.out.println("SystemTray is not supported");
 			System.exit(-1);
 		}
@@ -123,14 +124,14 @@ public class Window extends JWindow {
 		try {
 			final BufferedImage bf = ImageIO.read(Window.class.getResourceAsStream("/trayIcon.png"));
 			trayIcon = new TrayIcon(bf, "Purple-Rain " + VERSION);
-		} catch (IOException | IllegalArgumentException ex) {
+		} catch(IOException | IllegalArgumentException ex) {
 			System.exit(-2);
 		}
 		final SystemTray tray = SystemTray.getSystemTray();
 
 		final CheckboxMenuItem pauseItem = new CheckboxMenuItem("Pause");
 		pauseItem.addItemListener(e -> {
-			if (pauseItem.getState()) {
+			if(pauseItem.getState()) {
 				Handler.getInstance().halt();
 			} else {
 				Handler.getInstance().unhalt();
@@ -139,7 +140,7 @@ public class Window extends JWindow {
 
 		final CheckboxMenuItem hideItem = new CheckboxMenuItem("Hide");
 		hideItem.addItemListener(e -> {
-			if (hideItem.getState()) {
+			if(hideItem.getState()) {
 				pauseItem.setState(true);
 				Handler.getInstance().halt();
 				window.setVisible(false);
@@ -153,8 +154,9 @@ public class Window extends JWindow {
 		final MenuItem aboutItem = new MenuItem("About");
 		aboutItem.addActionListener(e -> {
 			try {
-				JOptionPane.showMessageDialog(null, "Written in tribute to Prince", "About", JOptionPane.OK_OPTION, new ImageIcon(ImageIO.read(Window.class.getResourceAsStream("/trayIcon.png"))));
-			} catch (HeadlessException | IOException ex) {} // swallow
+				JOptionPane.showMessageDialog(null, "Written in tribute to Prince", "About", JOptionPane.OK_OPTION,
+						new ImageIcon(ImageIO.read(Window.class.getResourceAsStream("/trayIcon.png"))));
+			} catch(HeadlessException | IOException ex) {} // swallow
 		});
 
 		final MenuItem settingsItem = new MenuItem("Settings");
@@ -164,7 +166,7 @@ public class Window extends JWindow {
 
 		final MenuItem exitItem = new MenuItem("Exit");
 		exitItem.addActionListener(e -> {
-			for (TrayIcon ti : tray.getTrayIcons()) {
+			for(TrayIcon ti : tray.getTrayIcons()) {
 				tray.remove(ti);
 			}
 			System.exit(0);
@@ -184,7 +186,7 @@ public class Window extends JWindow {
 
 		try {
 			tray.add(trayIcon);
-		} catch (AWTException e) {
+		} catch(AWTException e) {
 			System.out.println("TrayIcon could not be added.");
 		}
 		trayIcon.displayMessage("Minimised", "Purple-Rain is running in System Tray.", TrayIcon.MessageType.INFO);

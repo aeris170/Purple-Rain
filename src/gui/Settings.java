@@ -78,7 +78,7 @@ public final class Settings extends JDialog {
 
 		try {
 			super.setIconImage(ImageIO.read(getClass().getResourceAsStream("/trayIcon.png")));
-		} catch (IOException ex) {
+		} catch(IOException ex) {
 			System.exit(-2);
 		}
 
@@ -138,7 +138,7 @@ public final class Settings extends JDialog {
 		});
 
 		special.addChangeListener(e -> {
-			if (special.isSelected()) {
+			if(special.isSelected()) {
 				lsd.setEnabled(true);
 				rainbow.setEnabled(true);
 				rSlider.setEnabled(false);
@@ -158,13 +158,13 @@ public final class Settings extends JDialog {
 		});
 
 		lsd.addActionListener(e -> {
-			if (lsd.isEnabled() && lsd.isSelected()) {
+			if(lsd.isEnabled() && lsd.isSelected()) {
 				Panel.LSDSelect();
 			}
 		});
 
 		rainbow.addActionListener(e -> {
-			if (rainbow.isEnabled() && rainbow.isSelected()) {
+			if(rainbow.isEnabled() && rainbow.isSelected()) {
 				Panel.rainbowSelect();
 			}
 		});
@@ -225,10 +225,10 @@ public final class Settings extends JDialog {
 
 		Panel.setGlobalRainColor(new Color(prefs.getInt(RED, 127), prefs.getInt(GREEN, 0), prefs.getInt(BLUE, 255), prefs.getInt(ALPHA, 100)));
 		Handler.setMAX(prefs.getInt(MAX, 20));
-		if (prefs.getBoolean(SPECIAL, false)) {
-			if (prefs.getBoolean(LSD, false)) {
+		if(prefs.getBoolean(SPECIAL, false)) {
+			if(prefs.getBoolean(LSD, false)) {
 				Panel.LSDSelect();
-			} else if (prefs.getBoolean(RAINBOW, false)) {
+			} else if(prefs.getBoolean(RAINBOW, false)) {
 				Panel.rainbowSelect();
 			}
 		} else {
@@ -240,7 +240,7 @@ public final class Settings extends JDialog {
 	 * Retrieves the user specified settings from the hierarchial node for this
 	 * class.
 	 */
-	private void retrieveSettingsFromHierarchialNode() {
+	void retrieveSettingsFromHierarchialNode() {
 		// Retrieve the user preference node for the this class
 		Preferences prefs = Preferences.userNodeForPackage(getClass());
 
@@ -257,13 +257,13 @@ public final class Settings extends JDialog {
 
 		maxSpinner.setValue(max);
 
-		if (prefs.getBoolean(SPECIAL, false)) {
+		if(prefs.getBoolean(SPECIAL, false)) {
 			special.setSelected(true);
 			lsd.setEnabled(true);
 			rainbow.setEnabled(true);
-			if (prefs.getBoolean(LSD, false)) {
+			if(prefs.getBoolean(LSD, false)) {
 				lsd.setSelected(true);
-			} else if (prefs.getBoolean(RAINBOW, false)) {
+			} else if(prefs.getBoolean(RAINBOW, false)) {
 				rainbow.setSelected(true);
 			}
 		}
@@ -289,7 +289,7 @@ public final class Settings extends JDialog {
 
 			// Save the changes to registry(if windows, else idk where)
 			prefs.flush();
-		} catch (BackingStoreException ex) {
+		} catch(BackingStoreException ex) {
 			ex.printStackTrace();
 		}
 	}
@@ -306,7 +306,7 @@ public final class Settings extends JDialog {
 
 		String title = this.getTitle();
 
-		if (title != null) {
+		if(title != null) {
 			Font defaultFont = UIManager.getDefaults().getFont("Label.font");
 			int titleStringWidth = SwingUtilities.computeStringWidth(new JLabel().getFontMetrics(defaultFont), title);
 
@@ -315,7 +315,7 @@ public final class Settings extends JDialog {
 
 			// +10 accounts for the three dots that are appended when
 			// the title is too long
-			if (retVal.getWidth() + 10 <= titleStringWidth) {
+			if(retVal.getWidth() + 10 <= titleStringWidth) {
 				retVal = new Dimension(titleStringWidth, (int) retVal.getHeight());
 			}
 		}

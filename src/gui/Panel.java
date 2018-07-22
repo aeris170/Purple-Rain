@@ -27,7 +27,7 @@ public class Panel extends JPanel {
 	private static boolean userSelection, LSDSelection, rainbowSelection;
 
 	private Timer timer;
-	private Handler handler;
+	Handler handler;
 
 	/**
 	 * Instantiates a new panel.
@@ -117,17 +117,30 @@ public class Panel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if (userSelection) {
-			g.setColor(globalRainColor); //use global rain color
-		} else if (LSDSelection) {
-			g.setColor(new Color(r.nextInt(255), r.nextInt(255), (r.nextInt(255)))); //use a random color on each tick
+		if(userSelection) {
+			g.setColor(globalRainColor); // use global rain color
+		} else if(LSDSelection) {
+			g.setColor(new Color(r.nextInt(255), r.nextInt(255), (r.nextInt(255)))); // use
+																						// a
+																						// random
+																						// color
+																						// on
+																						// each
+																						// tick
 		}
-		for (int i = 0; i < handler.getRains().size(); i++) {
+		for(int i = 0; i < handler.getRains().size(); i++) {
 			final Rain rain = handler.getRains().get(i);
-			if (!userSelection && !LSDSelection && rainbowSelection) {
-				g.setColor(rain.getColor()); //use the built-in random random for each rain
+			if(!userSelection && !LSDSelection && rainbowSelection) {
+				g.setColor(rain.getColor()); // use the built-in random random
+												// for each rain
 			}
-			g.fillRect(rain.getXPos(), rain.getYPos(), rain.getWidth(), rain.getHeight()); //clear unnecessary trails formed by graphics context
+			g.fillRect(rain.getXPos(), rain.getYPos(), rain.getWidth(), rain.getHeight()); // clear
+																							// unnecessary
+																							// trails
+																							// formed
+																							// by
+																							// graphics
+																							// context
 		}
 	}
 }
