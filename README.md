@@ -8,7 +8,7 @@ A Java program that creates the effect "Purple Rain".
   * Multiple monitor support.
 	
 ## Dependancies: 
-  * [JNA][https://github.com/java-native-access/jna]
+  * [JNA](https://github.com/java-native-access/jna)
 
 ## Screenshots:
 ### White Rain
