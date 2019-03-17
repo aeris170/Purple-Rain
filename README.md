@@ -2,13 +2,13 @@
 A Java program that creates the effect "Purple Rain".
 
 ## Features:
-	* Fully customisable rain color.
-	* Save/Load user settings to Operating System's hierarchical nodes.
-	* System Tray support.
-	* Multiple monitor support.
+  * Fully customisable rain color.
+  * Save/Load user settings to Operating System's hierarchical nodes.
+  * System Tray support.
+  * Multiple monitor support.
 	
 ## Dependancies: 
-	* [JNA][https://github.com/java-native-access/jna]
+  * [JNA][https://github.com/java-native-access/jna]
 
 ## Screenshots:
 ### White Rain
