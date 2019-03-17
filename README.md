@@ -1,4 +1,4 @@
-# Purple-Rain 1.1
+# Purple-Rain 1.2
 A Java program that creates the effect "Purple Rain".
 
 ## Features:
