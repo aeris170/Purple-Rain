@@ -7,7 +7,7 @@ import java.util.Random;
 import gui.Window;
 
 /**
- * @author Doða Oruç <doga.oruc.tr@gmail.com>
+ * @author Doða Oruç
  * @version 1.1
  * @since 1.0
  */
@@ -54,7 +54,7 @@ public class Handler {
 	 *
 	 * @param max the new max raindrop per tick
 	 */
-	public static void setMAX(int max) {
+	public static void setMAX(final int max) {
 		MAX = max;
 	}
 
@@ -78,7 +78,7 @@ public class Handler {
 	public void add() {
 		if (!halted) {
 			for (int i = 0; i < MAX; i++) {
-				Rain rain = new Rain(r.nextInt(Rain.getDefaultRainWidth()), r.nextInt(Rain.getDefaultRainHeight()), r.nextInt(Window.getWindowWidth()), 0);
+				final Rain rain = new Rain(r.nextInt(Rain.getDefaultRainWidth()), r.nextInt(Rain.getDefaultRainHeight()), r.nextInt(Window.getWindowWidth()), 0);
 				list.add(rain);
 			}
 		}
@@ -94,21 +94,20 @@ public class Handler {
 	}
 
 	/**
-	 * Handle the raindrops. Move them down, remove the ones that went
-	 * off-screen. Add new ones depending on how much raindrop is removed on the
-	 * previous step.
+	 * Handle the raindrops. Move them down, remove the ones that went off-screen.
+	 * Add new ones depending on how much raindrop is removed on the previous step.
 	 */
 	public void handle() {
 		if (!halted) {
 			for (int i = 0; i < list.size(); i++) {
-				Rain rain = list.get(i);
+				final Rain rain = list.get(i);
 				rain.moveDown();
 				if (rain.getYPos() > Window.getWindowHeight()) {
 					list.remove(i);
 				}
 			}
 			for (int i = list.size(); i < MAX; i++) {
-				Rain rain = new Rain(r.nextInt(Rain.getDefaultRainWidth()), r.nextInt(Rain.getDefaultRainHeight()), r.nextInt(Window.getWindowWidth()), 0);
+				final Rain rain = new Rain(r.nextInt(Rain.getDefaultRainWidth()), r.nextInt(Rain.getDefaultRainHeight()), r.nextInt(Window.getWindowWidth()), 0);
 				list.add(rain);
 			}
 		}

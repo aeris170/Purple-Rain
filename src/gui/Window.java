@@ -5,12 +5,15 @@ import java.awt.CheckboxMenuItem;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
 import java.awt.TrayIcon;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -43,19 +46,18 @@ public class Window extends JWindow {
 	private static final long serialVersionUID = 8057422959109245215L;
 
 	/** The Constant VERSION NUMBER. */
-	public static final String VERSION = "1.1";
-
-	/** The Constant tk. */
-	private static final Toolkit tk = Toolkit.getDefaultToolkit();
+	public static final String VERSION = "1.2";
 
 	/** The Constant WIDTH. */
-	private static final int WIDTH = tk.getScreenSize().width;
+	@SuppressWarnings("hiding")
+	private static int WIDTH;
 
 	/** The Constant HEIGHT. */
-	private static final int HEIGHT = tk.getScreenSize().height;
+	@SuppressWarnings("hiding")
+	private static int HEIGHT;
 
 	/** The Constant SCREEN_SIZE. */
-	private static final Dimension SCREEN_SIZE = new Dimension(WIDTH, HEIGHT);
+	private static Dimension SCREEN_SIZE;
 
 	/**
 	 * Gets the window width.
@@ -81,9 +83,18 @@ public class Window extends JWindow {
 	 * @param args the command line arguments
 	 */
 	public static void main(final String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			createAndShowGUI();
-		});
+		final Rectangle2D result = new Rectangle2D.Double();
+		final GraphicsEnvironment localGE = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		for (final GraphicsDevice gd : localGE.getScreenDevices()) {
+			for (final GraphicsConfiguration graphicsConfiguration : gd.getConfigurations()) {
+				Rectangle2D.union(result, graphicsConfiguration.getBounds(), result);
+			}
+		}
+		WIDTH = (int) result.getWidth();
+		HEIGHT = (int) result.getHeight();
+		SCREEN_SIZE = new Dimension(WIDTH, HEIGHT);
+		System.out.println(SCREEN_SIZE);
+		SwingUtilities.invokeLater(() -> createAndShowGUI());
 	}
 
 	/**
@@ -92,8 +103,9 @@ public class Window extends JWindow {
 	private static void createAndShowGUI() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {} // swallow
-
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+			ex.printStackTrace();
+		}
 		final Window purpleRain = new Window();
 		createAndShowTray(purpleRain);
 		purpleRain.add(new Panel());
@@ -113,9 +125,9 @@ public class Window extends JWindow {
 	 *
 	 * @param window the window
 	 */
-	@SuppressWarnings("null")
-	private static void createAndShowTray(Window window) {
-		if(!SystemTray.isSupported()) {
+	@SuppressWarnings("unused")
+	private static void createAndShowTray(final Window window) {
+		if (!SystemTray.isSupported()) {
 			System.out.println("SystemTray is not supported");
 			System.exit(-1);
 		}
@@ -124,14 +136,15 @@ public class Window extends JWindow {
 		try {
 			final BufferedImage bf = ImageIO.read(Window.class.getResourceAsStream("/trayIcon.png"));
 			trayIcon = new TrayIcon(bf, "Purple-Rain " + VERSION);
-		} catch(IOException | IllegalArgumentException ex) {
+		} catch (IOException | IllegalArgumentException ex) {
+			ex.printStackTrace();
 			System.exit(-2);
 		}
 		final SystemTray tray = SystemTray.getSystemTray();
 
 		final CheckboxMenuItem pauseItem = new CheckboxMenuItem("Pause");
 		pauseItem.addItemListener(e -> {
-			if(pauseItem.getState()) {
+			if (pauseItem.getState()) {
 				Handler.getInstance().halt();
 			} else {
 				Handler.getInstance().unhalt();
@@ -140,7 +153,7 @@ public class Window extends JWindow {
 
 		final CheckboxMenuItem hideItem = new CheckboxMenuItem("Hide");
 		hideItem.addItemListener(e -> {
-			if(hideItem.getState()) {
+			if (hideItem.getState()) {
 				pauseItem.setState(true);
 				Handler.getInstance().halt();
 				window.setVisible(false);
@@ -155,8 +168,10 @@ public class Window extends JWindow {
 		aboutItem.addActionListener(e -> {
 			try {
 				JOptionPane.showMessageDialog(null, "Written in tribute to Prince", "About", JOptionPane.OK_OPTION,
-						new ImageIcon(ImageIO.read(Window.class.getResourceAsStream("/trayIcon.png"))));
-			} catch(HeadlessException | IOException ex) {} // swallow
+				        new ImageIcon(ImageIO.read(Window.class.getResourceAsStream("/trayIcon.png"))));
+			} catch (HeadlessException | IOException ex) {
+				ex.printStackTrace();
+			}
 		});
 
 		final MenuItem settingsItem = new MenuItem("Settings");
@@ -166,7 +181,7 @@ public class Window extends JWindow {
 
 		final MenuItem exitItem = new MenuItem("Exit");
 		exitItem.addActionListener(e -> {
-			for(TrayIcon ti : tray.getTrayIcons()) {
+			for (final TrayIcon ti : tray.getTrayIcons()) {
 				tray.remove(ti);
 			}
 			System.exit(0);
@@ -186,7 +201,7 @@ public class Window extends JWindow {
 
 		try {
 			tray.add(trayIcon);
-		} catch(AWTException e) {
+		} catch (final AWTException e) {
 			System.out.println("TrayIcon could not be added.");
 		}
 		trayIcon.displayMessage("Minimised", "Purple-Rain is running in System Tray.", TrayIcon.MessageType.INFO);
@@ -199,8 +214,8 @@ public class Window extends JWindow {
 	 *
 	 * @param w the window which to be made transparent
 	 */
-	private static void setTransparent(Component w) {
-		WinDef.HWND hwnd = getHWnd(w);
+	private static void setTransparent(final Component w) {
+		final WinDef.HWND hwnd = getHWnd(w);
 		int wl = User32.INSTANCE.GetWindowLong(hwnd, WinUser.GWL_EXSTYLE);
 		wl = wl | WinUser.WS_EX_LAYERED | WinUser.WS_EX_TRANSPARENT;
 		User32.INSTANCE.SetWindowLong(hwnd, WinUser.GWL_EXSTYLE, wl);
@@ -212,8 +227,8 @@ public class Window extends JWindow {
 	 * @param w the window
 	 * @return the window handle
 	 */
-	private static HWND getHWnd(Component w) {
-		HWND hwnd = new HWND();
+	private static HWND getHWnd(final Component w) {
+		final HWND hwnd = new HWND();
 		hwnd.setPointer(Native.getComponentPointer(w));
 		return hwnd;
 	}

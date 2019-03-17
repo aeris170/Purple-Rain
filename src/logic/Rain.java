@@ -4,14 +4,14 @@ import java.awt.Color;
 import java.util.Random;
 
 /**
- * @author Doða Oruç <doga.oruc.tr@gmail.com>
+ * @author Doða Oruç
  * @version 1.1
  * @since 1.0
  */
 public class Rain {
 
 	/** The Constant CHANGE_IN_Y_POSITION_PER_TICK. */
-	private static final int CHANGE_IN_Y_POSITION_PER_TICK = 3;
+	private static final int CHANGE_IN_Y_POSITION_PER_TICK = 5;
 
 	/** The Constant DEFAULT_RAIN_WIDTH. */
 	private static final int DEFAULT_RAIN_WIDTH = 3;
@@ -37,6 +37,9 @@ public class Rain {
 	/** The color of a raindrop. */
 	private Color color;
 
+	/** The velocity of a raindrop. */
+	private int velocity;
+
 	/**
 	 * Instantiates a new rain.
 	 *
@@ -50,7 +53,8 @@ public class Rain {
 		this.height = height;
 		this.xPos = xPos;
 		this.yPos = yPos;
-		this.color = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
+		color = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
+		velocity = CHANGE_IN_Y_POSITION_PER_TICK + r.nextInt(10) - 4;
 	}
 
 	/**
@@ -93,7 +97,7 @@ public class Rain {
 	 * Move down the raindrop by CHANGE_IN_Y_POSITION_PER_TICK pixels.
 	 */
 	public void moveDown() {
-		yPos = yPos + CHANGE_IN_Y_POSITION_PER_TICK;
+		yPos += velocity;
 	}
 
 	/**
@@ -128,7 +132,7 @@ public class Rain {
 	 *
 	 * @param color the new color of the raindrop
 	 */
-	public void setColor(Color color) {
+	public void setColor(final Color color) {
 		this.color = color;
 	}
 }

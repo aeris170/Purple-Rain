@@ -78,18 +78,19 @@ public final class Settings extends JDialog {
 
 		try {
 			super.setIconImage(ImageIO.read(getClass().getResourceAsStream("/trayIcon.png")));
-		} catch(IOException ex) {
+		} catch (final IOException ex) {
+			ex.printStackTrace();
 			System.exit(-2);
 		}
 
 		settingsPanel = new JPanel();
 		settingsPanel.setLayout(new BorderLayout());
 
-		JPanel center = new JPanel();
+		final JPanel center = new JPanel();
 		center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
-		JPanel south = new JPanel();
+		final JPanel south = new JPanel();
 		south.setLayout(new BoxLayout(south, BoxLayout.X_AXIS));
-		JPanel boxesNbuttonsPanel = new JPanel();
+		final JPanel boxesNbuttonsPanel = new JPanel();
 		boxesNbuttonsPanel.setLayout(new BoxLayout(boxesNbuttonsPanel, BoxLayout.X_AXIS));
 
 		final Color rainColor = Panel.getGlobalRainColor();
@@ -109,7 +110,7 @@ public final class Settings extends JDialog {
 		lsd.setEnabled(false);
 		rainbow.setEnabled(false);
 
-		ButtonGroup bg = new ButtonGroup();
+		final ButtonGroup bg = new ButtonGroup();
 		bg.add(lsd);
 		bg.add(rainbow);
 
@@ -138,7 +139,7 @@ public final class Settings extends JDialog {
 		});
 
 		special.addChangeListener(e -> {
-			if(special.isSelected()) {
+			if (special.isSelected()) {
 				lsd.setEnabled(true);
 				rainbow.setEnabled(true);
 				rSlider.setEnabled(false);
@@ -158,13 +159,13 @@ public final class Settings extends JDialog {
 		});
 
 		lsd.addActionListener(e -> {
-			if(lsd.isEnabled() && lsd.isSelected()) {
+			if (lsd.isEnabled() && lsd.isSelected()) {
 				Panel.LSDSelect();
 			}
 		});
 
 		rainbow.addActionListener(e -> {
-			if(rainbow.isEnabled() && rainbow.isSelected()) {
+			if (rainbow.isEnabled() && rainbow.isSelected()) {
 				Panel.rainbowSelect();
 			}
 		});
@@ -208,7 +209,7 @@ public final class Settings extends JDialog {
 		super.addWindowListener(new WindowAdapter() {
 
 			@Override
-			public void windowClosing(WindowEvent e) {
+			public void windowClosing(final WindowEvent e) {
 				retrieveSettingsFromHierarchialNode();
 				dispose();
 			}
@@ -221,14 +222,14 @@ public final class Settings extends JDialog {
 	 */
 	public static void initializeSettings() {
 		// Retrieve the user preference node for the this class
-		Preferences prefs = Preferences.userNodeForPackage(Settings.class);
+		final Preferences prefs = Preferences.userNodeForPackage(Settings.class);
 
 		Panel.setGlobalRainColor(new Color(prefs.getInt(RED, 127), prefs.getInt(GREEN, 0), prefs.getInt(BLUE, 255), prefs.getInt(ALPHA, 100)));
 		Handler.setMAX(prefs.getInt(MAX, 20));
-		if(prefs.getBoolean(SPECIAL, false)) {
-			if(prefs.getBoolean(LSD, false)) {
+		if (prefs.getBoolean(SPECIAL, false)) {
+			if (prefs.getBoolean(LSD, false)) {
 				Panel.LSDSelect();
-			} else if(prefs.getBoolean(RAINBOW, false)) {
+			} else if (prefs.getBoolean(RAINBOW, false)) {
 				Panel.rainbowSelect();
 			}
 		} else {
@@ -242,7 +243,7 @@ public final class Settings extends JDialog {
 	 */
 	void retrieveSettingsFromHierarchialNode() {
 		// Retrieve the user preference node for the this class
-		Preferences prefs = Preferences.userNodeForPackage(getClass());
+		final Preferences prefs = Preferences.userNodeForPackage(getClass());
 
 		Panel.setGlobalRainColor(prefs.getInt(RED, 127), prefs.getInt(GREEN, 0), prefs.getInt(BLUE, 255), prefs.getInt(ALPHA, 100));
 		Handler.setMAX(prefs.getInt(MAX, 20));
@@ -257,13 +258,13 @@ public final class Settings extends JDialog {
 
 		maxSpinner.setValue(max);
 
-		if(prefs.getBoolean(SPECIAL, false)) {
+		if (prefs.getBoolean(SPECIAL, false)) {
 			special.setSelected(true);
 			lsd.setEnabled(true);
 			rainbow.setEnabled(true);
-			if(prefs.getBoolean(LSD, false)) {
+			if (prefs.getBoolean(LSD, false)) {
 				lsd.setSelected(true);
-			} else if(prefs.getBoolean(RAINBOW, false)) {
+			} else if (prefs.getBoolean(RAINBOW, false)) {
 				rainbow.setSelected(true);
 			}
 		}
@@ -275,7 +276,7 @@ public final class Settings extends JDialog {
 	private void saveNewSettingsToHierarchialNode() {
 		try {
 			// Retrieve the user preference node for this class
-			Preferences prefs = Preferences.userNodeForPackage(getClass());
+			final Preferences prefs = Preferences.userNodeForPackage(getClass());
 
 			// Set the value of the preferences
 			prefs.putInt(RED, rSlider.getValue());
@@ -289,25 +290,23 @@ public final class Settings extends JDialog {
 
 			// Save the changes to registry(if windows, else idk where)
 			prefs.flush();
-		} catch(BackingStoreException ex) {
+		} catch (final BackingStoreException ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see java.awt.Container#getPreferredSize()
 	 * @see https://stackoverflow.com/a/12517873/9451867 Method to resize the
-	 * settings window respective to it's title.
-	 */
+	 * settings window respective to it's title. */
 	@Override
 	public Dimension getPreferredSize() {
 		Dimension retVal = super.getPreferredSize();
 
-		String title = this.getTitle();
+		final String title = getTitle();
 
-		if(title != null) {
-			Font defaultFont = UIManager.getDefaults().getFont("Label.font");
+		if (title != null) {
+			final Font defaultFont = UIManager.getDefaults().getFont("Label.font");
 			int titleStringWidth = SwingUtilities.computeStringWidth(new JLabel().getFontMetrics(defaultFont), title);
 
 			// account for titlebar button widths. (estimated)
@@ -315,7 +314,7 @@ public final class Settings extends JDialog {
 
 			// +10 accounts for the three dots that are appended when
 			// the title is too long
-			if(retVal.getWidth() + 10 <= titleStringWidth) {
+			if (retVal.getWidth() + 10 <= titleStringWidth) {
 				retVal = new Dimension(titleStringWidth, (int) retVal.getHeight());
 			}
 		}

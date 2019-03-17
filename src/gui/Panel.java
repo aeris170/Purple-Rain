@@ -2,8 +2,6 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -40,14 +38,10 @@ public class Panel extends JPanel {
 		LSDSelection = false;
 		rainbowSelection = false;
 		handler = Handler.getInstance();
-		timer = new Timer(10, new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				handler.handle();
-				handler.add();
-				repaint();
-			}
+		timer = new Timer(10, e -> {
+			handler.handle();
+			handler.add();
+			repaint();
 		});
 		timer.start();
 		setOpaque(false);
@@ -70,7 +64,7 @@ public class Panel extends JPanel {
 	 * @param b the presence of blue channel
 	 * @param a the presence of alpha channel
 	 */
-	public static void setGlobalRainColor(int r, int g, int b, int a) {
+	public static void setGlobalRainColor(final int r, final int g, final int b, final int a) {
 		globalRainColor = new Color(r, g, b, a);
 	}
 
@@ -79,7 +73,7 @@ public class Panel extends JPanel {
 	 *
 	 * @param c the new global rain color
 	 */
-	public static void setGlobalRainColor(Color c) {
+	public static void setGlobalRainColor(final Color c) {
 		globalRainColor = c;
 	}
 
@@ -110,37 +104,35 @@ public class Panel extends JPanel {
 		rainbowSelection = true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
-	 */
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics) */
 	@Override
-	public void paintComponent(Graphics g) {
+	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
-		if(userSelection) {
+		if (userSelection) {
 			g.setColor(globalRainColor); // use global rain color
-		} else if(LSDSelection) {
-			g.setColor(new Color(r.nextInt(255), r.nextInt(255), (r.nextInt(255)))); // use
-																						// a
-																						// random
-																						// color
-																						// on
-																						// each
-																						// tick
+		} else if (LSDSelection) {
+			g.setColor(new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255))); // use
+			                                                                       // a
+			                                                                       // random
+			                                                                       // color
+			                                                                       // on
+			                                                                       // each
+			                                                                       // tick
 		}
-		for(int i = 0; i < handler.getRains().size(); i++) {
+		for (int i = 0; i < handler.getRains().size(); i++) {
 			final Rain rain = handler.getRains().get(i);
-			if(!userSelection && !LSDSelection && rainbowSelection) {
+			if (!userSelection && !LSDSelection && rainbowSelection) {
 				g.setColor(rain.getColor()); // use the built-in random random
-												// for each rain
+				                             // for each rain
 			}
 			g.fillRect(rain.getXPos(), rain.getYPos(), rain.getWidth(), rain.getHeight()); // clear
-																							// unnecessary
-																							// trails
-																							// formed
-																							// by
-																							// graphics
-																							// context
+			                                                                               // unnecessary
+			                                                                               // trails
+			                                                                               // formed
+			                                                                               // by
+			                                                                               // graphics
+			                                                                               // context
 		}
 	}
 }

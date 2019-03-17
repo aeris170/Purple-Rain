@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
@@ -38,7 +37,7 @@ public class SpinSlider extends JPanel {
 	 * @param initialValue self-explanatory
 	 */
 	public SpinSlider(final int initialValue) {
-		this.setLayout(new FlowLayout());
+		setLayout(new FlowLayout());
 
 		spinner = new JSpinner();
 		slider = new JSlider(MIN, MAX, initialValue);
@@ -46,33 +45,25 @@ public class SpinSlider extends JPanel {
 		slider.setMinorTickSpacing(SLIDER_MINOR_TICK_SPACE);
 		slider.setMajorTickSpacing(SLIDER_MAJOR_TICK_SPACE);
 		slider.setPaintTicks(true);
-		slider.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSlider s = (JSlider) e.getSource();
-				if(!sliderFired) {
-					spinner.setValue(s.getValue());
-				}
+		slider.addChangeListener(e -> {
+			final JSlider s = (JSlider) e.getSource();
+			if (!sliderFired) {
+				spinner.setValue(s.getValue());
 			}
 		});
 		this.add(slider);
 
 		spinner.setModel(new SpinnerNumberModel(initialValue, MIN, MAX, 1));
-		spinner.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSpinner s = (JSpinner) e.getSource();
-				sliderFired = true;
-				slider.setValue((int) s.getValue());
-				sliderFired = false;
-			}
+		spinner.addChangeListener(e -> {
+			final JSpinner s = (JSpinner) e.getSource();
+			sliderFired = true;
+			slider.setValue((int) s.getValue());
+			sliderFired = false;
 		});
 		this.add(spinner);
 	}
 
-	public void addChangeListener(ChangeListener ch) {
+	public void addChangeListener(final ChangeListener ch) {
 		slider.addChangeListener(ch);
 		spinner.addChangeListener(ch);
 	}
@@ -91,7 +82,7 @@ public class SpinSlider extends JPanel {
 	 *
 	 * @param value the new value
 	 */
-	public void setValue(int value) {
+	public void setValue(final int value) {
 		slider.setValue(value);
 	}
 }
