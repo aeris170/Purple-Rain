@@ -7,7 +7,7 @@ A Java program that creates the effect "Purple Rain".
   * System Tray support.
   * Multiple monitor support.
 	
-## Dependancies: 
+## Dependencies: 
   * [JNA](https://github.com/java-native-access/jna)
 
 ## Screenshots:
