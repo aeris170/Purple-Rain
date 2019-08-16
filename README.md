@@ -1,4 +1,6 @@
 # Purple-Rain 1.2
+![social](https://repository-images.githubusercontent.com/138177693/bf8b8c00-9edf-11e9-8763-4d8007d26951)
+
 A Java program that creates the effect "Purple Rain".
 
 ## Features:
